@@ -1,28 +1,28 @@
-# Revisão, impacto e investigação
+# Review, impact, and investigation
 
 ## Review
 
-Confirme qual mudança revisar: working tree, staged, commits ou PR e sua base. Quando Git estiver disponível, operações de leitura como status, diff e inspeção de arquivos ajudam; não faça fetch, checkout ou reset implicitamente. Para PRs, não confunda diff entre pontas com diff desde o ancestral comum. Se a base estiver ausente, peça-a ou limite a revisão ao material fornecido.
+Confirm the review target: working tree, staged changes, commits, or a PR and its base. When Git is available, read operations such as status, diff, and file inspection help; do not implicitly fetch, check out, or reset. For PRs, distinguish a tip-to-tip diff from the diff since the common ancestor. If the base is missing, request it or limit review to supplied material.
 
-Leia o diff e o contexto completo das linhas afetadas. Siga tipos, callers, consumidores e testes que possam confirmar ou refutar uma suspeita. Diferencie defeito introduzido, problema preexistente e exposição de problema anterior; não atribua ao PR um defeito inalterado sem demonstrar relação.
+Read the diff and surrounding context. Follow types, callers, consumers, and tests that could confirm or refute a suspicion. Distinguish introduced defects, preexisting problems, and newly exposed older problems; do not attribute an unchanged defect to the PR without demonstrating the relationship.
 
-Para cada candidato, procure:
+For each candidate finding, establish:
 
-- Trigger e entrada concreta; resultado antes/depois e contrato esperado.
-- Evidência de alcançabilidade: caller, configuração, fluxo de UI ou teste.
-- Explicação causal e impacto para usuário/consumidor.
-- Contraexemplo que refute a hipótese: guard existente, validação anterior, contrato diferente ou código morto.
+- Trigger and concrete input; before/after outcome and expected contract.
+- Evidence of reachability: caller, configuration, UI flow, or test.
+- Causal explanation and impact on users/consumers.
+- A possible counterexample: existing guard, earlier validation, different contract, or unreachable code.
 
-Analise estados vazios, zero, falsos, nulos, erros, loading, concorrência, cancelamento e desmontagem quando pertinentes. Confira tipos/serialização, eventos, compatibilidade de API e autorização efetiva, sem aplicar checklists irrelevantes. Referencie linhas do arquivo atual ou identifique explicitamente o lado do diff. Se não houver numeração confiável, use símbolo/trecho e escopo; não invente linhas.
+Examine empty states, zero, false, null, errors, loading, concurrency, cancellation, and unmounting when relevant. Check types/serialization, events, API compatibility, and effective authorization without applying irrelevant checklists. Reference current file lines or explicitly identify the side of the diff. Without trustworthy numbering, use a symbol/snippet and scope; do not invent line numbers.
 
-Um problema plausível sem premissa comprovada é risco potencial. Preferência sem custo concreto é sugestão opcional. Um diff limpo pode resultar em zero achados.
+A plausible problem with an unproven premise is a potential risk. A preference without a concrete cost is an optional suggestion. A clean diff can produce zero findings.
 
 ## Impact
 
-Construa um mapa pequeno: mudança → contrato → consumidores → comportamento → validação. Inclua exports públicos, pacotes downstream, rotas, persistência, estado e integrações apenas quando houver dependência. Diferencie impacto direto demonstrado e indireto inferido. Para APIs públicas, avalie consumidores externos desconhecidos como lacuna; a busca local não os exclui.
+Build a small map: change → contract → consumers → behavior → validation. Include public exports, downstream packages, routes, persistence, state, and integrations only where there is a dependency. Distinguish demonstrated direct impact from inferred indirect impact. Treat unknown external consumers of public APIs as a gap; a local search does not exclude them.
 
-Escolha regressões que distingam antes/depois: entradas de fronteira, erro, fluxo nominal e integração relevante. Declare o limite de cobertura da busca.
+Choose regression checks that distinguish before/after: boundary inputs, errors, normal flow, and relevant integration. State the coverage limits of the investigation.
 
 ## Debug
 
-Registre esperado, observado, ambiente/versões e passos mínimos. Separe hipóteses por evidência e escolha uma observação que as diferencie. Busque causa, não somente um local onde o sintoma aparece. Não atribua causa definitiva com base em correlação. Sem reprodução, apresente diagnóstico estático e o próximo experimento. Não afirme que uma correção resolveu o problema sem validação correspondente.
+Record expected/observed behavior, environment/versions, and minimal reproduction steps. Separate hypotheses by evidence and choose an observation that can distinguish them. Seek the cause, not just the location of a symptom. Do not declare a definitive cause from correlation. Without reproduction, provide a static diagnosis and next experiment. Do not claim a fix resolved the problem without corresponding validation.

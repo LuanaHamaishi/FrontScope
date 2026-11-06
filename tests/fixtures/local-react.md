@@ -1,17 +1,17 @@
-# Contexto fornecido
+# Supplied context
 
-Pacote React 18.3.1, TypeScript, sem biblioteca de estado global. Componentes pequenos mantêm estado visual local. Os dados já chegam validados do domínio; `initial` é booleano. Não há relato de falha de desempenho. O escopo é somente este componente, sem autorização de edição. Os números abaixo são locais ao bloco.
+React 18.3.1 package, TypeScript, no global state library. Small components keep visual state locally. Data arrives validated by the domain; `initial` is boolean. No performance failure has been reported. Scope is this component only, without editing authorization. Any code line references are local to the block.
 
 ```tsx
 import { useState } from 'react';
 
 export function Details({ initial = false }: { initial?: boolean }) {
   const [open, setOpen] = useState(initial);
-  const label = open ? 'Ocultar detalhes' : 'Mostrar detalhes';
+  const label = open ? 'Hide details' : 'Show details';
   return (
     <section>
       <button aria-expanded={open} onClick={() => setOpen(!open)}>{label}</button>
-      {open && <p>Detalhes do produto</p>}
+      {open && <p>Product details</p>}
     </section>
   );
 }

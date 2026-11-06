@@ -1,22 +1,22 @@
-# Descoberta progressiva de contexto
+# Progressive context discovery
 
-Use antes de emitir julgamentos substanciais. A descoberta é uma investigação delimitada, não um inventário obrigatório de todo o projeto.
+Use before substantial engineering judgments. Discovery is a scoped investigation, not a mandatory inventory of the entire project.
 
-1. Comece pelo pedido, alvo e instruções legítimas aplicáveis. Confirme arquivos já alterados para não atribuir ou sobrescrever trabalho de terceiros. Identifique se o alvo é aplicação, biblioteca, workspace ou microfrontend.
-2. Leia manifesto do pacote relevante, gerenciador e lockfile disponíveis; configs de build, tipos, lint e testes que governem o alvo. Diferencie intervalo declarado, resolução no lockfile e versão instalada observada. Um lockfile sozinho não prova o estado de `node_modules`.
-3. No alvo e em poucos vizinhos representativos, identifique linguagem, framework e versão, roteamento, estado, busca de dados, composição de componentes, imports, design system e documentação arquitetural. Se não forem relevantes à pergunta, não aprofunde.
-4. Siga contratos até produtores e consumidores: tipos públicos, eventos, APIs, rotas, exports e testes. Em monorepos, expanda somente aos workspaces conectados ao comportamento investigado. Em microfrontends, confira contratos de integração, assets, estado e dependências compartilhadas antes de sugerir centralização.
-5. Pare quando houver evidência suficiente para avaliar a pergunta ou uma lacuna específica bloquear a conclusão. Peça o arquivo, diff, versão ou sintoma faltante, sem transformar inferência em fato.
+1. Start with the request, target, and applicable legitimate instructions. Identify existing changes so you do not attribute or overwrite someone else's work. Establish whether the target is an application, library, workspace, or microfrontend.
+2. Read the relevant package manifest, package manager information, available lockfile, and build/type/lint/test configuration governing the target. Distinguish declared ranges, lockfile resolutions, and observed installed versions. A lockfile alone does not prove the state of `node_modules`.
+3. In the target and a few representative neighbors, identify language, framework/version, routing, state, data fetching, component composition, imports, design system, and architectural documentation. Do not investigate irrelevant topics further.
+4. Follow contracts to producers and consumers: public types, events, APIs, routes, exports, and tests. In monorepos, expand only to workspaces connected to the behavior under investigation. In microfrontends, examine integration contracts, assets, state, and shared dependencies before suggesting centralization.
+5. Stop when evidence is sufficient to assess the question or a specific gap blocks a conclusion. Request the missing file, diff, version, or symptom without presenting inference as fact.
 
-Registre um mapa curto:
+Record a short context map:
 
-| Categoria | Como registrar |
+| Category | Record |
 | --- | --- |
-| Confirmado | Fato + arquivo/config/saída que o sustenta |
-| Inferido | Padrão observado + amostra + limite da inferência |
-| Restrição explícita | Regra arquitetural e fonte legítima |
-| Desconhecido | Informação ausente + efeito sobre a conclusão |
+| Confirmed | Fact plus supporting file/configuration/output |
+| Inferred | Observed pattern, sample, and inference limits |
+| Explicit constraint | Architectural rule and its legitimate source |
+| Unknown | Missing information and its effect on the conclusion |
 
-Sem filesystem, aceite um pacote de evidências fornecido pelo usuário: árvore reduzida, manifestos sem segredos, diff com base e head identificados, callers e testes relevantes. Sem Git, compare antes/depois fornecidos. Sem terminal, faça análise estática e liste as validações propostas como não executadas. Sem internet, use documentação local identificada e sinalize sua versão/proveniência.
+Without filesystem access, accept user-supplied evidence: a reduced tree, manifests without secrets, a diff with identified base/head, relevant callers, and tests. Without Git, compare supplied before/after material. Without a terminal, perform static analysis and list proposed validations as not performed. Without internet, use identified local documentation and state its version/provenance.
 
-Não infira ausência de testes a partir de uma listagem parcial. Não infira uma arquitetura inteira de um arquivo. Convenções inconsistentes podem ser legado ou defeito: explique o custo concreto antes de propor mudança.
+Do not infer missing tests from a partial listing or an entire architecture from one file. Inconsistent conventions may be legacy or defects: explain the concrete cost before proposing a change.

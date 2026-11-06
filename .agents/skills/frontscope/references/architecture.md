@@ -1,31 +1,31 @@
-# Arquitetura, responsabilidades e refatoração
+# Architecture, responsibilities, and refactoring
 
-## Avaliação arquitetural
+## Architectural assessment
 
-Compare fronteiras declaradas com imports e fluxos reais. Procure ciclos relevantes, dependência de domínio em detalhes de transporte/UI, contratos instáveis e mudanças que atravessam módulos sem necessidade. Explique o custo observado: propagação de alterações, testes difíceis, estado divergente ou acoplamento entre entregas. Um diretório por feature ou camada pode ser adequado; não imponha Clean Architecture, Atomic Design, FSD ou outro padrão.
+Compare declared boundaries with actual imports and flows. Look for relevant cycles, domain dependencies on transport/UI details, unstable contracts, and changes unnecessarily crossing modules. Explain the observed cost: change propagation, difficult testing, divergent state, or coupled delivery. Feature-based and layer-based structures can both be appropriate; do not impose Clean Architecture, Atomic Design, FSD, or another pattern.
 
-Em workspaces e microfrontends, identifique dono do contrato, direção das dependências, versionamento e ciclo de entrega. Uma extração compartilhada pode aumentar acoplamento e coordenação. Dependências e configurações existentes vêm antes de recomendações de reorganização.
+In workspaces and microfrontends, identify contract ownership, dependency direction, versioning, and delivery lifecycle. Shared extraction can increase coupling and coordination. Inspect existing dependencies and configuration before recommending reorganization.
 
 ## Locality First, Reusability When Needed
 
-Escolha e justifique uma das três saídas:
+Choose and justify one of three outcomes:
 
-| Saída | Quando faz sentido | Custo a considerar |
+| Outcome | When appropriate | Cost to consider |
 | --- | --- | --- |
-| Manter no componente/módulo | Estado e transformação pequenos, coesos com a UI e fáceis de testar/entender | Extração adicionaria navegação sem isolar mudança real |
-| Extrair módulo local junto ao consumidor | Regra/efeito com contrato próprio, complexidade independente ou fronteira útil de teste | Mais um contrato e coordenação de estado |
-| Promover a compartilhado | Responsabilidade estável entre consumidores/domínios e dono claro | Acoplamento de versões, API pública e generalização |
+| Keep in the component/module | State and transformations are small, cohesive with the UI, and easy to test/understand | Extraction would add navigation without isolating a real change boundary |
+| Extract a local module near its consumer | A rule/effect has its own contract, independent complexity, or useful testing boundary | Another contract and state coordination |
+| Promote to shared | Stable responsibility across consumers/domains with clear ownership | Version coupling, public API, and generalization |
 
-Um único consumidor pode justificar um hook/composable, serviço, validador, mapper, adaptador ou componente **local**. Considere coesão, clareza, complexidade, testabilidade, direção das dependências, manutenção e convenções. Não exija reutilização nem a invente para justificar extração.
+One consumer can justify a **local** hook/composable, service, validator, mapper, adapter, or component. Consider cohesion, clarity, complexity, testability, dependency direction, maintenance, and conventions. Do not require reuse or invent it to justify extraction.
 
-Separe preocupações de componente (interação/apresentação), feature (orquestração de um fluxo) e domínio (regra e contratos). Evite chamar toda lógica sem JSX/template de regra de domínio. Funções puras simples podem permanecer locais. Comprimento e quantidade de funções não provam mistura de responsabilidades.
+Separate component concerns (interaction/presentation), feature concerns (flow orchestration), and domain concerns (rules/contracts). Not all logic outside JSX/templates is domain logic. Simple pure functions may remain local. Length and function count do not prove mixed responsibilities.
 
-Exemplo de decisão, não estrutura obrigatória: num checkout que calcula tributos, serializa requisições, acessa API e desenha formulário, um cálculo puro e um cliente HTTP ao lado do componente podem isolar mudanças e testes. O estado visual pode continuar no componente. Não crie automaticamente pastas `hooks/`, `services/`, `helpers/` ou `context/`; nem eleve módulos a `shared/` sem benefício demonstrado.
+Decision example, not a required structure: in a checkout that calculates taxes, serializes requests, calls an API, and renders a form, a pure calculation and an HTTP client beside the component may isolate changes and tests. Visual state can remain in the component. Do not automatically create `hooks/`, `services/`, `helpers/`, or `context/` folders, or promote modules into `shared/` without demonstrated benefit.
 
 ## Refactor
 
-Antes de editar, exponha objetivo, evidência de custo, menor mudança proposta, alternativa de manter e trade-off. Preserve contratos observáveis: valores, erros, efeitos, ordem, timing, foco e acessibilidade relevantes. Diferencie melhoria estrutural de alteração intencional de comportamento.
+Before editing, explain the goal, evidence of cost, minimal proposed change, alternative of keeping the implementation, and trade-off. Preserve observable contracts: values, errors, effects, ordering, timing, focus, and relevant accessibility behavior. Distinguish structural improvement from intentional behavior changes.
 
-Quando autorizado, trabalhe em passos revisáveis e preserve a API externa quando possível. Se uma extração altera captura de estado, ciclo de vida ou escopo de dependência, valide essa semântica no framework detectado. Use testes de comportamento existentes e adicione proteção proporcional ao risco quando necessário; não testes que apenas espelhem a nova estrutura. Se não houver validação executável, declare a lacuna.
+When authorized, work in reviewable steps and preserve external APIs where possible. If extraction changes state capture, lifecycle, or dependency scope, validate that framework's semantics. Use existing behavior tests and add protection proportional to risk when necessary, not tests that mirror the new structure. State gaps when executable validation is unavailable.
 
-Em `explain`, descreva mecanismo, cenário em que a alternativa ajuda e cenário em que não ajuda. Diagramas de dependência/fluxo podem ajudar, mas rotule inferências e exemplos; não apresente uma arquitetura idealizada como inventário real.
+In `explain`, describe the mechanism, when an alternative helps, and when it does not. Dependency/flow diagrams can help, but label inferences and examples; do not present an idealized architecture as a real inventory.

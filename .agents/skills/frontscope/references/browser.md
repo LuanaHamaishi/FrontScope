@@ -1,36 +1,36 @@
-# Navegador e validação visual: adaptador do host
+# Browser and visual validation: host adapter
 
-Este é um protocolo de instruções v0.1, não uma implementação de driver. O host pode fornecer browser automation, terminal com suíte existente, screenshots anexados ou nenhuma dessas capacidades. Playwright é opcional; sua presença no manifesto não prova navegador instalado, servidor disponível ou autorização para executar.
+This is a v0.1 instruction protocol, not a driver implementation. The host may provide browser automation, a terminal with an existing suite, supplied screenshots, or none of these. Playwright is optional; a manifest dependency does not prove an installed browser, available server, or execution permission.
 
-## Detecção e escolha
+## Detection and selection
 
-Antes de qualquer ação, registre capacidades como **disponível**, **indisponível** ou **desconhecida**, com evidência. Avalie separadamente: navegação/interação, captura, leitura de imagens, comparação, console/runtime, servidor de teste e armazenamento local de artefatos. Verifique também permissão, alvo/ambiente e dados envolvidos.
+Before acting, record capabilities as **available**, **unavailable**, or **unknown**, with evidence. Assess navigation/interaction, capture, image reading, comparison, console/runtime, test server, and local artifact storage separately. Also verify permissions, target/environment, and data involved.
 
-| Condição observada | Adaptador e resultado permitido |
+| Observed condition | Adapter and permitted outcome |
 | --- | --- |
-| Ferramenta de browser + ambiente autorizado | Use as operações reais do host; registre passos e resultados |
-| Terminal + suíte existente executável e autorizada | Inspecione config/scripts e execute o alvo pertinente; não instale browser/pacotes implicitamente |
-| Apenas capturas fornecidas e leitura de imagem | Compare o que é visível; não alegue interação, console ou medições não fornecidas |
-| Sem browser/imagem ou com autorização ausente | Faça análise estática delimitada e entregue roteiro manual **não executado** |
+| Browser tool plus authorized environment | Use actual host operations; record steps and outcomes |
+| Terminal plus existing executable, authorized suite | Inspect configuration/scripts and run the relevant target; do not implicitly install browsers/packages |
+| Only supplied screenshots and image reading | Compare visible evidence; do not claim interaction, console inspection, or measurements not supplied |
+| No browser/images, or missing authorization | Perform scoped static analysis and provide a manual plan labeled **not executed** |
 
-Ferramenta falhou ou ambiente não iniciou: registre erro, interrompa a ação dependente e use fallback. Não repita instalações nem amplie permissões silenciosamente. Nenhum navegador é requisito para uma revisão de código funcionar.
+If a tool fails or the environment does not start, record the error, stop dependent actions, and use the fallback. Do not silently retry installations or expand permissions. Code review does not require a browser.
 
-## Contrato do adaptador
+## Adapter contract
 
-Mapeie operações lógicas para capacidades que realmente existem, sem inventar APIs: preparar estado → abrir alvo → configurar viewport → interagir → observar/capturar → inspecionar console → comparar → relatar. Operação não suportada deve retornar no relatório “não executada” e motivo. Não force um driver único nem prometa automação futura pronta.
+Map logical operations to actual capabilities without inventing APIs: prepare state → open target → configure viewport → interact → observe/capture → inspect console → compare → report. Unsupported operations must be reported as not performed, with a reason. Do not force a single driver or claim future automation is ready.
 
-Entradas mínimas: alvo local/teste autorizado, caso/estado, revisão base e candidata quando comparadas, viewport e evidência de baseline. Saída: capacidades e permissões, ambiente, passos, observações, artefatos locais autorizados, diferenças, classificação e lacunas. Não publique nem envie artefatos a serviços externos sem autorização.
+Minimum inputs: authorized local/test target, case/state, base/candidate revisions when comparing, viewport, and baseline evidence. Output: capabilities/permissions, environment, steps, observations, authorized local artifacts, differences, classification, and gaps. Do not publish or transmit artifacts externally without authorization.
 
-## Execução por modo
+## Execution by mode
 
-- `visual-review`: compare estados equivalentes de base/candidata. Relacione diferença a linhas de estilo/template/estado somente se houver evidência. Diferencie mudança esperada, possível regressão e inconclusivo; diferença visual isolada não é defeito confirmado.
-- `browser-test`: defina passos e resultado observável antes de interagir. Cubra o comportamento pedido, erros de runtime/console disponíveis, foco e teclado relevantes. Diferencie resultado funcional de aparência.
-- `responsive-audit`: derive viewports de breakpoints e dispositivos relevantes; verifique overflow, conteúdo cortado, ordem, alvos de interação e foco. Sem renderização, descreva riscos de CSS como hipóteses e proponha larguras a testar. Não afirme responsividade validada por ler media queries.
+- `visual-review`: compare equivalent base/candidate states. Connect a difference to style/template/state lines only with evidence. Distinguish intentional change, possible regression, and inconclusive observations; a visual difference alone is not a confirmed defect.
+- `browser-test`: define steps and observable outcome before interaction. Cover requested behavior, available console/runtime errors, and relevant focus/keyboard behavior. Distinguish functionality from appearance.
+- `responsive-audit`: derive viewports from relevant breakpoints/devices; check overflow, clipped content, ordering, interaction targets, and focus. Without rendering, describe CSS risks as hypotheses and propose widths to test. Reading media queries does not validate responsiveness.
 
-Controle versão do browser, SO/DPR, viewport, zoom, fontes carregadas, locale/fuso, animações, relógio/dados dinâmicos, rede e estado determinístico. Se algum controle estiver ausente, registre o efeito na comparação. Tolerância de pixels deve ter justificativa; não esconda diffs com máscaras amplas.
+Control browser version, OS/DPR, viewport, zoom, loaded fonts, locale/timezone, animations, dynamic clock/data, network, and deterministic state. State missing controls and their effect on comparison. Justify pixel tolerances; do not hide differences with broad masks.
 
-Use dados sintéticos. Antes de capturar/transmitir informações sensíveis, obtenha autorização; prefira estado sem dados sensíveis. Nunca sobrescreva baseline aprovado sem autorização específica. Atualizar baseline não demonstra correção. Sem baseline comparável, relate observações atuais, não uma “regressão comprovada”.
+Use synthetic data. Obtain authorization before capturing/transmitting sensitive information; prefer states without sensitive data. Never overwrite approved baselines without specific authorization. Updating a baseline does not demonstrate correctness. Without a comparable baseline, report current observations, not a proven regression.
 
-## Fallback utilizável
+## Usable fallback
 
-Entregue: motivo da indisponibilidade, observação estática com arquivo/símbolo, caso de teste, ambiente/viewport propostos, passos manuais, resultado esperado e evidência a coletar. Exemplo de roteiro: abrir estado sintético de checkout em larguras derivadas dos breakpoints; percorrer por Tab; submeter erro conhecido; verificar foco, overflow e mensagem; registrar console e captura local autorizada. Rotule tudo que não foi executado. Não é preciso instalar ferramentas para emitir esse relatório.
+Provide the reason for unavailable execution, static observation with file/symbol, test case, proposed environment/viewport, manual steps, expected outcome, and evidence to collect. Example plan: open a synthetic checkout state at widths derived from breakpoints; navigate with Tab; submit a known error; inspect focus, overflow, and message; record console and authorized local screenshots. Label everything not executed. No tool installation is required to deliver this report.

@@ -1,6 +1,6 @@
-"""Sonda opcional de descoberta nativa; não solicita turno de modelo.
+"""Optional native discovery probe; does not request a model turn.
 
-Usa a configuração existente do Codex. O protocolo app-server é experimental.
+Uses existing Codex configuration. The app-server protocol is experimental.
 """
 import json
 import queue
@@ -18,7 +18,7 @@ EXPECTED = ROOT / '.agents' / 'skills' / 'frontscope' / 'SKILL.md'
 def probe():
     binary = shutil.which('codex')
     if not binary:
-        print('BLOQUEADO: codex não encontrado. Nenhuma instalação realizada.')
+        print('BLOCKED: codex executable not found. Nothing was installed.')
         return 2
     process = subprocess.Popen(
         [binary, 'app-server', '--stdio'], cwd=ROOT,
@@ -46,9 +46,9 @@ def probe():
             item = messages.get(timeout=max(0.1, deadline - time.monotonic()))
             if item.get('id') == request_id:
                 if 'error' in item:
-                    raise RuntimeError('Consulta rejeitada pelo app-server.')
+                    raise RuntimeError('Request rejected by the app-server.')
                 return item['result']
-        raise TimeoutError('Sem resposta do app-server.')
+        raise TimeoutError('No response from the app-server.')
 
     def find_skill(item):
         if isinstance(item, dict):
@@ -78,13 +78,13 @@ def probe():
         }})
         found = find_skill(response(2))
         if not found or found.get('enabled') is not True:
-            print('FALHOU: FrontScope deste repositório não foi encontrado habilitado.')
+            print('FAILED: FrontScope from this repository was not found enabled.')
             return 1
         print(json.dumps({key: found.get(key) for key in ('name', 'path', 'scope', 'enabled')}, ensure_ascii=False))
-        print('OK: descoberta nativa; nenhum turno de modelo solicitado. Execução não avaliada.')
+        print('OK: native discovery; no model turn requested. Workflow execution not evaluated.')
         return 0
     except (queue.Empty, TimeoutError, RuntimeError, OSError) as error:
-        print(f'BLOQUEADO: descoberta não concluída ({type(error).__name__}).')
+        print(f'BLOCKED: discovery not completed ({type(error).__name__}).')
         return 2
     finally:
         process.terminate()

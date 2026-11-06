@@ -1,5 +1,5 @@
-# React: leitura condicional
+# React: conditional reference
 
-Confirme versão, runtime/SSR e convenções do projeto. Siga ownership de estado, props, identidade de elementos/keys e contratos de efeitos. Para suspeita de stale closure, corrida ou dependência ausente, mostre sequência de render/efeito que produz o erro e guards existentes. Observe cleanup e cancelamento; não suponha que toda execução duplicada em desenvolvimento ocorra em produção.
+Confirm version, runtime/SSR, and project conventions. Follow state ownership, props, element/key identity, and effect contracts. For suspected stale closures, races, or missing dependencies, show the render/effect sequence producing the error and existing guards. Check cleanup/cancellation; do not assume every duplicate development execution also happens in production.
 
-Hook local pode isolar um efeito/coordenar estado para um único consumidor. Uma função pura não precisa virar hook. Não prescreva Context, memo, useMemo ou useCallback sem fronteira/benefício concretos. Re-render isolado não prova gargalo; consulte evidência e versão antes de recomendar otimizações ou APIs.
+A local hook can isolate an effect or coordinate state for one consumer. Pure functions need not become hooks. Do not prescribe Context, memo, useMemo, or useCallback without a concrete boundary/benefit. An isolated re-render does not prove a bottleneck; check evidence and version before recommending optimizations or APIs.

@@ -1,3 +1,3 @@
-# Contrato do checkout
+# Checkout contract
 
-Função JavaScript pura usada no resumo e na emissão do valor do pedido. `subtotal` é um número não negativo e `discountPercent` é validado antes da chamada: número entre 0 e 100, null ou undefined. Zero significa sem desconto; null/undefined aplicam o desconto padrão de 10%. O caller envia `total(100, 0)` na compra sem promoção. `before.mjs` é base e `after.mjs` é candidata. Não há autorização para editar, executar instalações ou acessar rede. Se houver terminal, a execução de checks locais sem rede está autorizada.
+A pure JavaScript function used in the summary and to produce the order amount. `subtotal` is nonnegative and `discountPercent` is validated before invocation: a number from 0 to 100, null, or undefined. Zero means no discount; null/undefined select the default 10% discount. The caller sends `total(100, 0)` for a purchase without a promotion. `before.mjs` is the base and `after.mjs` is the candidate. Editing, installations, and network access are not authorized. If a terminal exists, local checks without network access are authorized.

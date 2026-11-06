@@ -10,7 +10,7 @@ Its workflows connect recommendations to the repository's actual contracts, conv
 
 The current implementation is an instruction-based skill with focused references, a report template, reproducible evaluation fixtures, and development checks. The host agent provides tools and executes the workflow. Basic code reviews require no package installation or dedicated runtime.
 
-This README is in English. The skill instructions, supporting guides, evaluation material, and default review reports are currently in Brazilian Portuguese. To receive a report in English, include **“Respond in English”** in your request.
+English is the default language for the skill instructions, documentation, evaluation material, and review reports. You can explicitly request another response language, for example **“Respond in Brazilian Portuguese”**. Technical identifiers and existing application text are preserved unless their translation is authorized.
 
 ## What FrontScope provides today
 
@@ -24,7 +24,7 @@ FrontScope v0.1 prioritizes contextual analysis and conservative engineering dec
 - **Dependency migration guidance:** compare declared, resolved, and observable installed versions; connect release notes, breaking changes, affected usage, and peer dependencies to a validation plan.
 - **Quality guidance:** investigate performance, testing, reliability, frontend security, accessibility, and debugging with explicit evidence and uncertainty.
 - **Browser and visual workflows:** detect available host capabilities and choose browser tools, an existing test suite, supplied screenshots, or a clearly labeled manual fallback.
-- **Consistent reporting:** describe findings with severity, confidence, evidence, impact, recommended action, and validation guidance.
+- **Consistent reporting:** describe findings with unique report IDs, severity, confidence, evidence, impact, recommended action, and validation guidance; include an ordered plan when applicable.
 
 Performance profiling, dependency scanning, browser automation, and image comparison depend on tools supplied by the host. FrontScope does not bundle those engines.
 
@@ -165,14 +165,13 @@ Depth never grants permission to edit files or scan an entire monorepo unnecessa
 
 ## Usage examples
 
-These are example requests, not claims that the tasks have been executed. Replace paths, branches, package names, and versions with real inputs. The examples use Codex's `$frontscope` prefix; use the corresponding invocation for your agent. Add “Respond in English” whenever you want to override the skill's default report language.
+These are example requests, not claims that the tasks have been executed. Replace paths, branches, package names, and versions with real inputs. The examples use Codex's `$frontscope` prefix; use the corresponding invocation for your agent. Reports default to English; explicitly request another language when needed.
 
 ### Review a staged change
 
 ```text
 $frontscope Review the staged diff in quick mode. Check relevant callers for
 behavioral regressions and broken contracts. Do not edit source files.
-Respond in English.
 ```
 
 Expected focus: the staged changes and relevant consumers, confirmed findings separated from risks, and an explicit account of checks performed or not performed. A clean diff can produce zero findings.
@@ -302,13 +301,22 @@ and explain the maintenance trade-offs. Do not edit files.
 
 Automatic activation can also be tested by omitting `$frontscope` and making a matching request. Observe whether the host actually loads the skill; do not assume selection.
 
+### Request a report in another language
+
+```text
+$frontscope Review the staged diff in quick mode without editing files.
+Respond in Brazilian Portuguese.
+```
+
+This changes the response language for the request while preserving the same engineering workflow, evidence requirements, and permission boundaries.
+
 ## Report format
 
 The [shared report contract](.agents/skills/frontscope/templates/report.md) includes an executive summary, context and limits, findings, validations performed, validations not performed, and remaining risks. Authorized changes add the files and contracts changed, their purpose, and validation results.
 
 Each actionable finding includes the applicable fields:
 
-- Title and classification: confirmed finding, potential risk, or optional suggestion.
+- Unique report ID, title, and classification: confirmed finding, potential risk, or optional suggestion.
 - Severity and confidence, including unresolved assumptions.
 - File and verified line, symbol, or relevant scope.
 - Evidence, trigger, causal explanation, and technical impact.
@@ -321,7 +329,7 @@ Each actionable finding includes the applicable fields:
 | `Moderate` | Meaningful maintainability, reliability, or performance concern with an explained mechanism. |
 | `Suggestion` | Optional improvement or contextual preference. |
 
-Severity and confidence are separate dimensions. Preferences should not be promoted into defects. See the [guided report examples](tests/examples.md) for a confirmed regression, a clean diff, and a browser fallback.
+Severity and confidence are separate dimensions. Preferences should not be promoted into defects. When action is warranted, the report includes an ordered, minimal plan with dependencies, scope, risks, and validation. A suggested plan does not authorize execution. See the [guided report examples](tests/examples.md) for a confirmed regression, a clean diff, and a browser fallback.
 
 ## Tools, permissions, and restricted environments
 
@@ -365,14 +373,14 @@ git diff --check
 
 | Check | Purpose |
 | --- | --- |
-| `tests/validate.py` | Validate the package's restricted YAML profile, naming, local links, resource isolation, and evaluation inputs. It is not a general YAML parser or a complete official specification validator. |
+| `tests/validate.py` | Validate the package's restricted YAML profile, naming, local links, resource isolation, evaluation inputs, and fixture mapping to specification scenarios T01–T12. Mapping coverage does not establish behavioral success. It is not a general YAML parser or a complete official specification validator. |
 | `tests/check-fixtures.mjs` | Reproduce the sample zero-discount regression and compare the clean-change outputs for selected inputs. Success validates the fixture assumptions, not the defective candidate. |
 | `tests/probe_codex.py` | Optionally query native discovery through a local Codex app-server without requesting a model turn. It uses existing Codex configuration and an experimental protocol. |
 | `git diff --check` | Check tracked changes for whitespace errors. |
 
 Python 3.9+ is needed only for the development validators, Node with `.mjs` support only for the executable JavaScript fixtures, and an installed Codex binary only for the optional discovery probe. Basic use of the skill requires none of these runtimes. No project package installation is required for the bundled checks.
 
-The [evaluation manifest](tests/cases.json) contains eight scenarios:
+The [evaluation manifest](tests/cases.json) contains twelve cases:
 
 1. Keep cohesive React responsibilities local without unnecessary extraction.
 2. Apply comparable locality principles to a Vue component.
@@ -382,10 +390,14 @@ The [evaluation manifest](tests/cases.json) contains eight scenarios:
 6. Assess an upgrade using supplied release notes, code usage, and peer requirements.
 7. Recognize unavailable browser tools and provide a usable fallback.
 8. Resist instructions injected into reviewed source content.
+9. Assess an existing local hook with a single consumer without forcing shared placement or inlining.
+10. Separate confirmed consumers from potential downstream impact in a monorepo.
+11. Reject an unsafe legacy precedent as justification for a new defect.
+12. Respect sensitive-material restrictions even when screenshot tools are available.
 
-The scenarios also assess report consistency, severity, confidence, evidence, and honest validation claims. They include fixed inputs and acceptance/rejection criteria. Model responses are not deterministic: structural checks and JavaScript fixture results do not replace independent behavioral evaluation.
+The cases map explicitly to specification scenarios T01–T12 in the [evaluation guide](tests/README.md); the mapping is not one-to-one. The read-only evaluation procedure compares source inventories/hashes before and after execution and inspects tool activity across review cases. The cases also assess report IDs, consistency, severity, confidence, evidence, and honest validation claims. They include fixed inputs and acceptance/rejection criteria. Model responses are not deterministic: structural checks and JavaScript fixture results do not replace independent behavioral evaluation.
 
-Follow the [evaluation guide](tests/README.md) to run each prompt with only its intended inputs, keep the answer rubric out of the agent's context, and record outcomes in fresh sessions. The guided report examples were produced during implementation; they are not a blind evaluation. The eight cases have not been executed as an independent model evaluation suite.
+Follow the [evaluation guide](tests/README.md) to run each prompt with only its intended inputs, keep the answer rubric out of the agent's context, and record outcomes in fresh sessions. The guided report examples were produced during implementation; they are not a blind evaluation. The twelve cases have not been executed as an independent model evaluation suite.
 
 The optional `skills-ref` validator was not run. The skill-creator validator was also not run because PyYAML was unavailable. Neither is a mandatory dependency for using FrontScope.
 

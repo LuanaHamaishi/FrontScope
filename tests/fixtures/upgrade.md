@@ -1,8 +1,8 @@
-# Evidências fornecidas para análise offline
+# Supplied evidence for offline analysis
 
-**Todos os pacotes, versões e release notes abaixo são fictícios.** Não buscar esses pacotes na internet nem instalá-los. Projeto JavaScript; sem acesso a `node_modules`, terminal ou rede. Pré-upgrade: origem declarada 1.4.0, destino proposto 2.0.0.
+**All packages, versions, and release notes below are fictional.** Do not search for these packages online or install them. JavaScript project; no access to `node_modules`, a terminal, or the network. Pre-upgrade: declared source 1.4.0, proposed target 2.0.0.
 
-`package.json` relevante:
+Relevant `package.json`:
 
 ```json
 {
@@ -13,7 +13,7 @@
 }
 ```
 
-Extrato de `package-lock.json` lockfileVersion 3:
+Excerpt from `package-lock.json`, lockfileVersion 3:
 
 ```json
 {
@@ -24,7 +24,7 @@ Extrato de `package-lock.json` lockfileVersion 3:
 }
 ```
 
-Release notes fornecidas de catalog-client 2.0.0: `listProducts()` continua assíncrono, mas seu resultado deixa de ser `Product[]` e passa a `{ items: Product[], nextCursor: string | null }`. O peer `@frontscope-fixture/runtime` passa de `^2.0.0` para `^3.0.0`. Não há outra mudança documentada neste material. API runtime 3 não foi fornecida.
+Supplied catalog-client 2.0.0 release notes: `listProducts()` remains asynchronous, but its result changes from `Product[]` to `{ items: Product[], nextCursor: string | null }`. The `@frontscope-fixture/runtime` peer changes from `^2.0.0` to `^3.0.0`. No other change is documented in this material. The runtime 3 API was not supplied.
 
 `features/catalog/loadNames.js`:
 
@@ -36,4 +36,4 @@ export async function loadNames() {
 }
 ```
 
-Caller `CatalogPage` apresenta os nomes retornados; usa esta função diretamente sem adaptar a resposta. Nenhum teste, build ou instalação foi executado ou fornecido.
+The `CatalogPage` caller displays the returned names and uses this function directly without adapting the response. No tests, build, or installation were executed or supplied.

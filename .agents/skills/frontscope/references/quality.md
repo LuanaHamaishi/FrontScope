@@ -1,25 +1,25 @@
-# Desempenho, confiabilidade, segurança e acessibilidade
+# Performance, reliability, security, and accessibility
 
 ## Optimize
 
-Comece pelo sintoma, fluxo, volume de dados e orçamento quando disponível. Separe perfil medido de hipótese estática. Avalie renderização/reatividade, recomputação, árvore de componentes, waterfalls de rede, tamanho do bundle, loading, cache e liberação de recursos. Para cada hipótese, indique mecanismo e medição: profiler do host/framework, trace, waterfall ou análise de bundle **se disponíveis**.
+Start with the symptom, flow, data volume, and budget where available. Separate measured profiles from static hypotheses. Assess rendering/reactivity, recomputation, component trees, network waterfalls, bundle size, loading, caching, and resource cleanup. For each hypothesis, identify its mechanism and a measurement: host/framework profiler, trace, waterfall, or bundle analysis **if available**.
 
-Memoização tem custos de comparação, memória e invalidação; cache pode servir dados incorretos e exigir limites. Justifique por cálculo/identidade/fluxo concreto e meça antes/depois quando autorizado. Não use quantidade de renders como defeito sem impacto. Sem instrumentos, forneça experimento, não percentuais de melhoria.
+Memoization costs comparison, memory, and invalidation; caches can serve incorrect data and need bounds. Justify recommendations through a concrete computation/identity/flow and measure before/after when authorized. Render count alone is not a defect without impact. Without instruments, propose an experiment, not improvement percentages.
 
 ## Test
 
-Mapeie risco → comportamento → nível de teste → asserção observável. Use unitários para regra isolada, integração para contratos/efeitos, componente para interação semântica e E2E para jornada crítica. Considere erros, vazio, concorrência, cancelamento e limites de dados pertinentes. Priorize proteção de regressão reproduzível, não meta arbitrária de cobertura.
+Map risk → behavior → test level → observable assertion. Use unit tests for isolated rules, integration tests for contracts/effects, component tests for semantic interaction, and E2E tests for critical journeys. Consider relevant errors, empty states, concurrency, cancellation, and data boundaries. Prioritize reproducible regression protection, not arbitrary coverage targets.
 
-Mocks devem respeitar contratos reais e não ocultar a incompatibilidade investigada; evite mockar precisamente a fronteira que o teste pretende validar. Melhore testabilidade com uma fronteira local quando houver necessidade, sem criar abstrações apenas para satisfazer mocks. Confira infraestrutura e comandos existentes antes de sugerir novas ferramentas.
+Mocks should honor real contracts and not hide the incompatibility under investigation; avoid mocking the very boundary the test should validate. Improve testability through a local boundary when needed, without creating abstractions merely to satisfy mocks. Inspect existing infrastructure and commands before suggesting new tools.
 
-Só classifique um check como aprovado após observar comando, escopo, saída e término. Diferencie aprovado, falhou, bloqueado e não executado. Resultado fornecido pelo usuário deve ser atribuído a ele; proposta de comando não é execução.
+Only mark a check as passed after observing command, scope, output, and completion. Distinguish passed, failed, blocked, and not performed. Attribute user-supplied results to the user; a proposed command is not execution.
 
-## Segurança e acessibilidade
+## Security and accessibility
 
-Siga dados até sinks relevantes: HTML dinâmico, URLs, navegação, mensagens entre origens e storage. Confira fronteira de confiança, escape/sanitização no contexto correto, dados sensíveis em bundle/log/storage, validação no servidor e origem efetiva. Não confunda validação frontend com autorização. Para dependências, use evidência atual de advisory quando disponível e autorizado; falta de scanner não permite declarar ausência de vulnerabilidades.
+Follow data into relevant sinks: dynamic HTML, URLs, navigation, cross-origin messages, and storage. Check trust boundaries, context-appropriate escaping/sanitization, sensitive data in bundles/logs/storage, server-side validation, and effective origins. Frontend validation does not establish authorization. For dependencies, use current advisory evidence when available and authorized; lack of a scanner does not establish absence of vulnerabilities.
 
-Inspecione semântica HTML, nome acessível, rótulos, ordem/foco, teclado, estados, mensagens de erro e uso apropriado de ARIA. Elementos nativos podem resolver interações sem scripts extras. Contraste e layout podem exigir renderização; análise estática não comprova aparência, experiência com leitor de tela ou conformidade integral. Uma revisão leve não substitui auditoria completa de segurança/acessibilidade.
+Inspect semantic HTML, accessible names, labels, order/focus, keyboard behavior, states, error messages, and appropriate ARIA. Native elements can provide interaction without extra scripts. Contrast and layout can require rendering; static analysis does not establish appearance, screen-reader experience, or complete compliance. A lightweight review is not a complete security/accessibility audit.
 
-## Audit e explain
+## Audit and explain
 
-Em `audit`, delimite pacote, fluxos e amostra antes de ampliar. Carregue referências específicas apenas para problemas relevantes. Priorize por impacto e confiança, expondo partes não examinadas. Em `explain`, ensine mecanismo e trade-offs com exemplos rotulados; não transforme preferências em exigências.
+In `audit`, define package, flows, and sample before expanding. Load specialized references only for relevant issues. Prioritize impact and confidence and expose unexamined areas. In `explain`, teach mechanisms and trade-offs with labeled examples; do not turn preferences into requirements.

@@ -1,3 +1,3 @@
-# Contrato de rótulo
+# Label contract
 
-JavaScript, função pura de apresentação. O caller fornece inteiros não negativos validados. A mudança elimina uma variável intermediária sem alterar o contrato. `before.mjs` é base e `after.mjs` é candidata. Escopo só desta mudança; nenhum arquivo deve ser editado. Não há requisito de desempenho, convenção que exija variável intermediária ou consumidores externos com comportamento diferente.
+JavaScript, pure presentation function. The caller supplies validated nonnegative integers. The change removes an intermediate variable without altering the contract. `before.mjs` is the base and `after.mjs` is the candidate. Scope is this change only; no files should be edited. There is no performance requirement, convention requiring an intermediate variable, or external consumer with different behavior.

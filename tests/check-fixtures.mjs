@@ -1,4 +1,4 @@
-// Verifica a verdade dos exemplos JS; não mede comportamento de um agente.
+// Checks JavaScript fixture assumptions, not agent behavior.
 import assert from 'node:assert/strict';
 import { total as before } from './fixtures/regression/before.mjs';
 import { total as after } from './fixtures/regression/after.mjs';
@@ -13,6 +13,6 @@ for (const value of [null, undefined, 10, 100]) {
 for (const count of [0, 1, 2, 10, 1000]) {
   assert.equal(cleanBefore(count), cleanAfter(count));
 }
-console.log('OK: regressão de zero reproduzida (base=100, candidata=90).');
-console.log('OK: controle negativo preserva saída nas 5 entradas verificadas.');
-console.log('Estes checks validam fixtures, não decisões do modelo nem compatibilidade de agentes.');
+console.log('OK: zero-discount regression reproduced (base=100, candidate=90).');
+console.log('OK: negative control preserves output for all 5 checked inputs.');
+console.log('These checks validate fixtures, not model decisions or agent compatibility.');

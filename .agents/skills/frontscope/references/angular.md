@@ -1,5 +1,5 @@
-# Angular: leitura condicional
+# Angular: conditional reference
 
-Confirme versão, uso de standalone/NgModule, signals/observables e estratégia de detecção. Siga bindings, inputs/outputs e escopo de providers; mover um serviço pode mudar sua vida útil e compartilhamento. Investigue subscriptions, destruição/cancelamento e detecção de mudanças com evidência da versão e do fluxo.
+Confirm version, standalone/NgModule usage, signals/observables, and change-detection strategy. Follow bindings, inputs/outputs, and provider scope; moving a service can change lifetime and sharing. Investigate subscriptions, destruction/cancellation, and change detection with version and flow evidence.
 
-Serviço local pode separar transporte/orquestração de um único componente sem se tornar singleton global. Não imponha hooks ou Context. Não recomende mudar para OnPush/signals apenas como preferência; demonstre benefício e compatibilidade com atualização de estado e templates existentes.
+A local service can separate transport/orchestration for one component without becoming a global singleton. Do not impose hooks or Context. Do not recommend OnPush/signals merely as a preference; demonstrate benefit and compatibility with existing state updates and templates.

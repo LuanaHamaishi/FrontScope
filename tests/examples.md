@@ -1,43 +1,45 @@
-# Saídas guiadas de exemplo
+# Guided output examples
 
-Exemplos redigidos pelo agente que implementou a skill, aplicando suas instruções aos fixtures. Não são avaliações cegas, execuções do Copilot/Claude ou resultados de uma suíte de modelos. Os resultados JavaScript citados foram observados no check local indicado; nenhum browser foi usado.
+These examples were written by the implementing agent using the skill instructions and fixtures. They are not blind evaluations, Copilot/Claude executions, or results from a model evaluation suite. JavaScript results cited below were observed in the named local check; no browser was used.
 
-## Review / standard — regressão
+## Review / standard — regression
 
-Resumo: regressão confirmada no cálculo do checkout. Revisão de leitura limitada à função e ao contrato fornecido.
+Summary: confirmed regression in checkout calculation. Read-only review limited to the function and supplied contract.
 
-Contexto: JavaScript puro; o caller fornece `discountPercent=0` para compras sem promoção. Contrato confirmado pelo fixture, não por aplicativo real. Infraestrutura e demais consumidores desconhecidos.
+Context: pure JavaScript; the caller supplies `discountPercent=0` for purchases without a promotion. The contract is confirmed by the fixture, not a real application. Infrastructure and other consumers are unknown.
 
-**Confirmado — High — confiança alta: zero passa a receber desconto padrão.** Local: `tests/fixtures/regression/after.mjs`, linha 2, `total`. A troca de `??` por `||` substitui zero por 10. O check `node tests/check-fixtures.mjs` observou `total(100, 0)=100` na base e `90` na candidata. Como o valor é usado na emissão do pedido, uma compra sem promoção recebe desconto indevido. Ação mínima: preservar o teste de nulidade da base. Validar explicitamente null/undefined acrescentaria código sem benefício demonstrado neste contrato. Proteção recomendada: zero, null/undefined e desconto explícito, incluindo o caller do pedido.
+**F-001 — Confirmed — High — high confidence: zero receives the default discount.** Location: `tests/fixtures/regression/after.mjs`, line 2, `total`. Replacing `??` with `||` substitutes 10 for zero. The `node tests/check-fixtures.mjs` check observed `total(100, 0)=100` in the base and `90` in the candidate. Since this value is used to produce the order amount, a purchase without a promotion receives an unintended discount. Minimal action: preserve the base's nullish check. Explicitly checking null/undefined would add code without demonstrated benefit for this contract. Recommended protection: zero, null/undefined, and explicit discounts, including the order caller.
 
-Riscos potenciais e sugestões opcionais: nenhum adicional identificado neste escopo. Não se revisou o restante do checkout.
+Potential risks and optional suggestions: none additionally identified within this scope. The rest of checkout was not reviewed.
 
-Validações realizadas: inspeção de contrato/base/candidata; execução local de `node tests/check-fixtures.mjs`, reprodução da regressão e controle negativo, término 0. Esse término aprova o harness, **não** a candidata.
+Suggested plan for F-001, not executed: preserve the zero-discount case in a regression test; restore the nullish operator when a fix is authorized; run relevant tests and verify integration of the order amount. Fixture inspection does not authorize changing a real application.
 
-Validações não realizadas: testes integrados do pedido, build e browser; app/infraestrutura não fazem parte do fixture. Nenhum código foi corrigido. Integração real do valor emitido permanece dependente do contrato fornecido.
+Validations performed: contract/base/candidate inspection; local execution of `node tests/check-fixtures.mjs`, regression reproduction and negative control, exit 0. That exit validates the harness, **not** the candidate.
 
-## Review / quick — controle limpo
+Validations not performed: order integration tests, build, and browser; application/infrastructure are outside the fixture. No code was fixed. Actual order integration remains dependent on the supplied contract.
 
-Resumo: nenhum problema acionável encontrado no escopo analisado. A candidata retorna a mesma expressão antes atribuída a uma variável local.
+## Review / quick — clean control
 
-Contexto do fixture: entrada inteira não negativa, função pura e sem requisito de variável intermediária. Arquitetura da aplicação é desconhecida e irrelevante para essa equivalência local.
+Summary: no actionable findings identified within the inspected scope. The candidate returns the same expression previously assigned to a local variable.
 
-Achados confirmados, riscos potenciais e sugestões opcionais: nenhum. Não há justificativa para extração, memoização ou abstração adicional.
+Fixture context: nonnegative integer input, pure function, no requirement for an intermediate variable. Application architecture is unknown and irrelevant to this local equivalence.
 
-Validações realizadas: inspeção das funções e comparação executável em `node tests/check-fixtures.mjs` para 0, 1, 2, 10 e 1000; saídas iguais, término 0. A amostra não é prova exaustiva para qualquer valor JavaScript; a conclusão usa também o contrato e a expressão idêntica.
+Confirmed findings, potential risks, and optional suggestions: none. There is no justification for extraction, memoization, or additional abstraction.
 
-Validações não realizadas: aplicação, build, browser e demais consumidores. Sem alterações. Nenhum risco adicional identificado na mudança local; não é aprovação do projeto inteiro.
+Validations performed: function inspection and executable comparison through `node tests/check-fixtures.mjs` for 0, 1, 2, 10, and 1000; identical outputs, exit 0. This sample is not an exhaustive proof for arbitrary JavaScript values; the conclusion also uses the contract and identical expression.
 
-## Responsive-audit + visual-review — sem navegador
+Validations not performed: application, build, browser, and other consumers. No changes. No additional risk identified in the local change; this does not approve the entire project.
 
-Resumo: risco estático de overflow com largura fixa; regressão visual inconclusiva. Nenhum teste visual ou responsivo foi executado.
+## Responsive-audit + visual-review — no browser
 
-Contexto: browser, terminal, imagem, captura e console indisponíveis conforme fixture. Baseline, HTML, layout pai e estilos globais desconhecidos. `.order-summary` muda de largura fluida limitada para 960px.
+Summary: static overflow risk from fixed width; visual regression is inconclusive. No visual or responsive test was executed.
 
-**Risco potencial — Moderate — confiança média: largura fixa pode exceder o espaço disponível.** Local: `.order-summary` no CSS candidato, símbolo sem arquivo completo. Se o espaço for menor que 960px e nenhum estilo/contêiner compensar, o elemento poderá transbordar. O efeito depende do layout ausente. Recomenda-se inspecionar o contexto e preservar dimensionamento fluido se essa for a intenção; não editar automaticamente.
+Context: browser, terminal, image, capture, and console unavailable according to the fixture. Baseline, HTML, parent layout, and global styles unknown. `.order-summary` changes from bounded fluid width to 960px.
 
-Validação realizada: comparação estática dos trechos CSS. Não há captura, pixels comparados, console ou navegação observada.
+**F-001 — Potential risk — Moderate — medium confidence: fixed width may exceed available space.** Location: `.order-summary` in the supplied candidate CSS, symbol without a full file. If available space is below 960px and no style/container compensates, the element may overflow. The effect depends on missing layout context. Inspect that context and preserve fluid sizing if intended; do not edit automatically. This ID belongs to this report, not the previous example.
 
-Validações não realizadas e roteiro manual: definir dados sintéticos e ambiente estável; confirmar breakpoints. Como exemplos propostos, testar larguras 360, 768 e 1280 CSS px, registrando browser/DPR/fontes/zoom. Abrir o mesmo estado na base/candidata, observar overflow e conteúdo cortado, navegar por teclado e registrar console/capturas locais autorizadas. Só classificar defeito após observar efeito indevido e relacioná-lo à mudança. Obter baseline comparável sem sobrescrever aprovação existente. Não capturar informação sensível sem permissão.
+Validation performed: static CSS comparison. No capture, compared pixels, console, or navigation observed.
 
-Riscos restantes: layout real, baseline e comportamento não observados. Roteiro acima **não executado**.
+Validations not performed and manual plan: define synthetic data and a stable environment; confirm breakpoints. As proposed examples, test 360, 768, and 1280 CSS px, recording browser/DPR/fonts/zoom. Open equivalent base/candidate states, inspect overflow and clipped content, navigate with the keyboard, and record console/authorized local captures. Classify a defect only after observing an unintended effect and connecting it to the change. Obtain a comparable baseline without overwriting existing approval. Do not capture sensitive information without permission.
+
+Residual risks: actual layout, baseline, and behavior remain unobserved. The plan above is **not executed**.
