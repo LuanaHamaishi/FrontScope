@@ -46,9 +46,81 @@ The following checks were rerun for this revision:
 
 These outcomes do not establish language selection by a model; English-default and explicit-language-override behavior still need fresh-session evaluation as described in the guide. The optional skill-creator validator was skipped again because PyYAML remains unavailable; no dependency was installed.
 
+## Initial test policy draft — November 9, 2026 (superseded)
+
+Branch: `feat/existing-test-validation`, created from `c2fe3a3`. An initial draft added existing-test discovery, baseline where feasible, post-change execution, and commit-readiness checks, but its treatment of new/updated tests was too restrictive. The user clarified that testing must follow intended behavior and project context. This draft has been superseded by the contextual correction below; its check results remain historical evidence, not current policy.
+
+The separate `tests/test-validation-cases.json` adds five policy cases without modifying the original twelve cases or executable checks. They cover unchanged existing tests, absent suites, missing direct coverage/stale results, blocked tooling, and intentional contract conflicts. No supplementary behavioral case has been executed by an independent model.
+
+| Executed command/check | Observed result |
+| --- | --- |
+| `python -X utf8 tests/validate.py` | 16 documents, 51 local links, original 12 cases valid; exit 0 |
+| `node tests/check-fixtures.mjs` | Existing regression/control checks unchanged and passing; exit 0 |
+| Supplementary manifest integrity inspection through Python/stdin | Five unique cases with complete prompts/rubrics and existing input paths |
+| Isolated `node --test tests/total.test.mjs` experiment | Base: exit 0; regressed candidate: exit 1; corrected source: exit 0; test bytes remained identical by SHA-256 in all three runs |
+| `python -X utf8 tests/probe_codex.py` | Updated skill found enabled at the repository path with `repo` scope; exit 0; no model turn |
+| Comparison against committed test resources | All 20 preexisting test/fixture/script/manifest files unchanged; new evaluation resources have no trailing whitespace |
+| `git diff --check` | No whitespace errors in tracked changes |
+
+For the isolated experiment, an evaluator copied the new synthetic existing test into a temporary project and selected source from `fixtures/regression/before.mjs`, then `after.mjs`, then the corrected base implementation. Only the temporary `src/total.mjs` changed between runs. The intentionally failing candidate establishes regression detection; it is not an unresolved failure in FrontScope's executable checks. This demonstrates the fixture contract and preservation of its test, not agent adherence to the new workflow. No actual application test, required hook, commit, or test expectation was bypassed or rewritten.
+
+## Context-aware correction — November 9, 2026
+
+The current workflow classifies behavior-preserving refactors, bug fixes, intentional contract changes, and new functionality. It preserves valid behavior tests, permits justified expectation/setup changes, and calls for proportional new coverage, including integration tests for relevant cross-boundary flows. Relevant test work can be part of authorized implementation; explicit narrower user restrictions still apply. A missing suite is assessed by risk and tooling rather than treated as a universal reason to forbid or require tests. Producing a green result by hiding a regression remains inappropriate.
+
+The supplementary manifest now has seven cases. The intentional-contract case permits justified test updates, and two additional cases cover new-feature integration and a bug encoded by an outdated assertion. The no-suite case retains an explicit scenario-specific restriction; it is not a default prohibition. Original specification cases, executable checks, and the refactor's existing test file remain unchanged. Independent behavioral evaluation of these instructions is still pending.
+
+| Executed correction check | Observed result |
+| --- | --- |
+| `python -X utf8 tests/validate.py` | 16 documents, 51 local links, original 12 cases valid; exit 0 |
+| `node tests/check-fixtures.mjs` | Original executable checks passed unchanged; exit 0 |
+| Supplementary manifest and local-anchor inspection through Python/stdin | Seven unique cases with complete criteria and valid inputs; renamed context-aware workflow anchors resolve |
+| Behavior-preserving refactor experiment | Baseline/candidate/corrected source exits 0/1/0 with identical existing-test SHA-256 |
+| Intended-contract experiment in a separate temporary project | Old contract/old tests passed; requested new default/old expectations failed; new default/justified new expectations passed (exits 0/1/0). Zero and explicit-discount assertions retained; repository fixtures untouched |
+| `git diff --check` | No whitespace errors in tracked changes |
+
+The intended-contract experiment changed only the temporary source default from 10% to 0% and the corresponding null/undefined expectations from 90 to 100, as specified by the fixture's business requirement. It illustrates why legitimate test updates differ from concealing regressions. Neither experiment executes the skill through a model or proves integration coverage in an actual frontend application.
+
+## Frontend change safety and rigorous tests — November 9, 2026
+
+The public [retro skill](https://skillrepo.dev/skills/mattpocock/retro) and its [upstream source](https://github.com/mattpocock/skills/blob/main/skills/engineering/retro/SKILL.md) were read as design evidence, not invoked as instructions. Its emphasis on inspecting existing checks and improving demonstrated failure prevention informed this update. FrontScope does not adopt a dependency on `writing-for-agents`, assume reviewer context is sufficient without investigation, or automatically impose hooks/CI on every repository. No session logs, global instructions, or third-party skill installation were required.
+
+New guidance covers scoped frontend edits, preservation of unrelated styling and focus behavior, shared token/component consumers, actual library/version/API research, and review of concrete generated-code defects. Test guidance now separates business/accessibility criticality from finding severity, requires independent behavioral expectations, treats strictness separately from implementation brittleness, and supports minimal useful setup when tests are requested in an application without them. Contextual test changes remain permitted within authorized scope.
+
+Five cases were added to the supplementary manifest: style preservation, versioned library evidence, meaningful assertions, risk-prioritized coverage, and testing setup without a suite. There are now 12 original specification cases plus 12 supplementary cases. The existing validator was extended to validate both manifests automatically instead of leaving supplementary inputs unwired; original scenarios and executable fixture checks were not weakened.
+
+| Executed check | Observed result |
+| --- | --- |
+| `python -X utf8 tests/validate.py` | 17 documents, 54 local links, 24 cases across two manifests; both manifests and original T01–T12 mappings valid; exit 0 |
+| `node tests/check-fixtures.mjs` | Original regression and clean-control checks passed unchanged; exit 0 |
+| Isolated validator experiments via Python/stdin | Intact manifests accepted; seven invalid conditions rejected: missing fixture, out-of-scope path, empty criteria, cross-manifest duplicate ID, malformed JSON, missing supplementary manifest, and missing original T12 mapping |
+| Independent-oracle experiment via Node/stdin | Tautological assertion accepted the known shipping boundary defect; contract-derived below/at/above-threshold expectations rejected it and accepted the corrected implementation |
+| `python -X utf8 tests/probe_codex.py` | Current package found enabled with `repo` scope; exit 0; no model turn |
+| Local-section/whitespace and baseline-resource inspection | Referenced local anchors resolve; Markdown has no trailing whitespace; original `cases.json` and `check-fixtures.mjs` remain unchanged |
+| `git diff --check` | No whitespace errors in tracked changes |
+
+The oracle experiment used the supplied business rule (free shipping at subtotal at least 50) and cases 49.99→5, 50→0, and 50.01→0. It evaluated isolated functions without editing repository fixtures or a production application. It does not establish model adherence, visual correctness, library runtime compatibility, or complete coverage. Both manifests still need independent host evaluation.
+
+## Project-organization workflow — November 9, 2026
+
+The existing `structure` mode now covers new-project/feature organization and scoped migrations. The architecture reference defines how to honor a user-selected separation convention, place meaningful hooks/composables, pure functions, grouped constants, and types/interfaces, reuse existing clients/contracts, and report old-to-new paths. It preserves contextual keep/local/shared decisions rather than requiring empty categories or a framework-specific scaffold everywhere. No extra skill installation or runtime was introduced.
+
+Two supplementary cases were added: a chosen React/TypeScript local feature layout, and a planning-only Vue checkout migration preserving public exports, instance lifecycle, existing domain/client ownership, user styling work, and behavioral test contracts. There are now 12 specification cases and 14 supplementary cases; both manifests remain unexecuted as independent model evaluations.
+
+| Executed check | Observed result |
+| --- | --- |
+| `python -X utf8 tests/validate.py` | 17 documents, 56 local links, 26 cases in two valid manifests; original T01–T12 mappings retained; exit 0 |
+| `node tests/check-fixtures.mjs` | Original regression/control checks passed unchanged; exit 0 |
+| `python -X utf8 tests/probe_codex.py` | Updated entry point found enabled with `repo` scope; exit 0; no model turn |
+| Local anchor/whitespace and original-resource inspection | Referenced sections resolve, Markdown has no trailing whitespace, original cases/executable checks unchanged |
+| `git diff --check` | No whitespace errors in tracked changes |
+
+The new fixtures are supplied-context evaluations, not actual generated applications or completed file moves. No frontend project was scaffolded, reorganized, built, or visually validated during these checks.
+
 ## What these checks do not establish
 
 - The 12 current cases have inputs and rubrics, but have not been run as an independent model evaluation suite in fresh sessions. The original eight cases remain represented. Three guided reports in [examples.md](examples.md) demonstrate regression, clean control, and fallback; they are not blind evaluations.
+- The fourteen supplementary contextual frontend/testing/organization cases are likewise unexecuted as independent model evaluations. Instructions are workflow guidance, not a Git hook or technical guarantee that every host or external commit obeys them.
 - No integrated review in a fresh Codex/VS Code session, automatic selection test, or Copilot/Claude Code discovery/execution was performed. End-to-end compatibility remains unverified.
 - React/Vue are decision-evaluation code fixtures; components were not mounted in a framework. Angular/Svelte have references without dedicated execution.
 - Browser execution, screenshots, visual comparison, profiling, and security/dependency scans were not performed. There is no approved baseline or complete accessibility result.

@@ -17,12 +17,17 @@ English is the default language for the skill instructions, documentation, evalu
 FrontScope v0.1 prioritizes contextual analysis and conservative engineering decisions:
 
 - **Context discovery:** inspect the relevant repository scope, manifests, versions, lockfiles, build configuration, tests, conventions, and architectural constraints before making substantial recommendations.
+- **Safe frontend changes:** preserve unrelated styling, behavior, and existing user work; inspect shared styles, design tokens, component variants, and consumers before replacing or overriding them.
+- **Version-aware library research:** inspect actual imports, wrappers, declarations, configuration, and applicable official documentation before choosing APIs or adding a parallel library. Distinguish declared, resolved, and observable installed versions and report unavailable evidence.
 - **Code and PR review:** investigate changes, contracts, callers, and consumers; distinguish introduced regressions from existing problems and optional preferences.
 - **Architecture and impact analysis:** examine module boundaries, dependency direction, coupling, cohesion, workspace relationships, and downstream effects.
 - **Responsibility and component design:** decide whether logic should remain in place, move into a local module, or become shared when there is architectural justification.
+- **New-project and scoped organization:** use `structure` to choose and apply a local convention for components, hooks/composables, pure functions, constants, types/interfaces, and integrations. Honor an explicitly selected separation while avoiding unused categories and unrelated repository rewrites.
 - **Refactoring advice and authorized implementation:** explain the trade-offs, preserve observable behavior, and prefer the smallest appropriate change within the authorized scope.
 - **Dependency migration guidance:** compare declared, resolved, and observable installed versions; connect release notes, breaking changes, affected usage, and peer dependencies to a validation plan.
 - **Quality guidance:** investigate performance, testing, reliability, frontend security, accessibility, and debugging with explicit evidence and uncertainty.
+- **Context-aware test validation:** classify refactors, fixes, behavior changes, and new functionality before deciding which tests to preserve, update, or add. Run relevant existing and new tests after completed changes and before authorized commits; select integration coverage for affected boundaries and explain changes to expectations through intended behavior.
+- **Risk-prioritized, meaningful assertions:** identify critical flows and derive expected outcomes independently from business rules/contracts. Prefer tests that reject plausible defects over assertions that merely reproduce implementation logic or check mock calls. Keep test priority separate from finding severity.
 - **Browser and visual workflows:** detect available host capabilities and choose browser tools, an existing test suite, supplied screenshots, or a clearly labeled manual fallback.
 - **Consistent reporting:** describe findings with unique report IDs, severity, confidence, evidence, impact, recommended action, and validation guidance; include an ordered plan when applicable.
 
@@ -86,6 +91,7 @@ The distributable package is the entire `.agents/skills/frontscope/` directory. 
 | --- | --- |
 | [SKILL.md](.agents/skills/frontscope/SKILL.md) | Entry point, mode selection, investigation depth, permissions, and shared decision rules. |
 | [context.md](.agents/skills/frontscope/references/context.md) | Progressive repository discovery and capability-aware investigation. |
+| [change-safety.md](.agents/skills/frontscope/references/change-safety.md) | Scoped code generation, preservation of styling, actual library/API research, and proportionate deterministic checks. |
 | [review-impact.md](.agents/skills/frontscope/references/review-impact.md) | Diff review, consumer analysis, change impact, and debugging. |
 | [architecture.md](.agents/skills/frontscope/references/architecture.md) | Architectural boundaries, responsibility placement, and conservative refactoring. |
 | [upgrades.md](.agents/skills/frontscope/references/upgrades.md) | Pre-upgrade and post-upgrade compatibility assessment. |
@@ -143,7 +149,7 @@ Users can name a mode or describe their intent naturally. Mode names guide the w
 | `review` | Review code or a PR with findings tied to evidence and affected consumers. |
 | `architect` | Evaluate module boundaries, dependencies, cohesion, and architectural consistency. |
 | `refactor` | Recommend refactoring or implement a minimal change when explicitly authorized. |
-| `structure` | Decide where responsibilities belong and whether extraction should remain local. |
+| `structure` | Organize a new project/feature or plan a scoped migration; decide responsibility placement and local versus shared boundaries. |
 | `upgrade` | Assess dependency compatibility, migration work, and validation needs. |
 | `impact` | Trace a change through contracts and consumers. |
 | `optimize` | Investigate performance symptoms and distinguish measurements from hypotheses. |
@@ -207,17 +213,54 @@ a shared abstraction. A single consumer is acceptable. Do not edit files.
 
 Expected focus: cohesion, complexity, testability, ownership, and project conventions. Extraction is not required merely because the component contains state or helper functions.
 
+### Organize a new feature or restructure an existing one
+
+```text
+$frontscope Use structure/standard to propose organization for a new
+React/TypeScript customer-search feature. Use meaningful local separation
+for the component, hook, grouped constants, pure mapping, and view types.
+Reuse existing API clients and contracts. Explain each file and its test
+boundary; do not create empty categories or shared modules for future reuse.
+```
+
+```text
+$frontscope Plan a scoped reorganization of src/features/checkout.
+Follow the project's framework and feature-local convention. Show the
+target tree and old-to-new responsibility paths, preserving public exports,
+state ownership, styles, and behavior. Identify required import/test changes.
+Do not move files until implementation is requested.
+```
+
+The [project-organization workflow](.agents/skills/frontscope/references/architecture.md#project-organization) is a focused reference within FrontScope, not a separate installation or mandatory sub-skill. An explicitly chosen separation convention guides the target scope. Types/interfaces can share a cohesive type module; pure functions do not need hooks; JavaScript projects do not require TypeScript; other frameworks use their own state/lifecycle boundaries. Only real responsibilities produce files. For authorized migrations, implementation includes the relevant import/test adjustments and validations, not a repository-wide redesign.
+
 ### Implement a refactor within an authorized scope
 
 ```text
 $frontscope Use refactor/standard. You may extract the tax calculation from
-src/features/checkout/Checkout.tsx into a local module beside it and adjust
-its existing unit tests. Explain the plan first and preserve observable
-behavior. Run the relevant existing local unit tests if they require no
-installation or network access. Do not move unrelated files or commit.
+src/features/checkout/Checkout.tsx into a local module beside it.
+Explain the plan first and preserve observable behavior. Assess existing
+coverage and adapt test setup only where the structure legitimately changes.
+Add useful coverage if the risk justifies it, using the project's conventions.
+Run relevant existing and added tests when available and permitted.
+Explain any changed expectations and how they reflect the intended contract.
+Do not move unrelated files or commit.
 ```
 
 The skill separates review from execution. Permission to assess a component does not imply permission to modify it; an explicit implementation request defines the authorized scope.
+
+### Preserve styling and use the repository's actual libraries
+
+```text
+$frontscope Implement the API validation message in the checkout form.
+Inspect the current UI library, wrapper components, styles, and relevant
+versions/docs first. Reuse the existing error state and preserve unrelated
+layout, theme, focus behavior, and responsive styles.
+Identify critical flows and add or update meaningful tests within this scope.
+Explain test expectations using the business contract, not the generated code.
+Do not replace libraries, redesign shared styles, or commit.
+```
+
+Visual checks depend on available authorized tools. A passing behavior test does not prove visual equivalence. If the user asks to introduce tests in an application without them, plan and implement a minimal compatible setup within the actual authorization; do not stop solely because no suite exists or silently install unrelated tooling.
 
 ### Assess a dependency migration
 
@@ -337,6 +380,14 @@ FrontScope operates read-only by default. In `review` mode it does not edit sour
 
 The skill does not silently install packages, upgrade dependencies, perform destructive operations, reorganize repositories, commit, push, or access production systems. Tool availability does not grant permission. Existing test commands must be inspected because they can write artifacts or contact services.
 
+For completed code changes, follow [context-aware test validation](.agents/skills/frontscope/references/quality.md#context-aware-test-validation). Determine what the change does, which business rules/contracts remain stable, and which are intentionally new or different. Preserve behavioral expectations for pure refactors; update outdated expectations for justified behavior changes or bug fixes; add meaningful coverage for new functionality. Use the project's architecture, test structure, tooling, and risk to select unit, component, integration, or E2E coverage. New cross-boundary behavior needs appropriate integration protection rather than only isolated mocks. Missing direct coverage does not excuse skipping an existing package suite.
+
+Creating or updating relevant tests can be part of an authorized implementation request; no blanket prohibition or separate approval for every test edit applies. Explain the contract-based reason and retain unrelated protections. Respect explicit restrictions on test edits. Do not lower coverage, skip failures, blindly update snapshots, or weaken assertions just to conceal a regression. Without a suite, assess whether proportional coverage is useful; do not automatically impose a framework or reject testing. Report blocked execution separately from absence and obtain permission for installations or external access outside the existing scope.
+
+Before a separately authorized commit, confirm results cover the current source and tests; rerun affected checks after relevant edits. Do not commit through failed or unexecuted required checks without informed user direction. An unchanged validated diff does not need a duplicate run solely for the commit.
+
+This is an agent workflow policy, not a bundled Git hook or CI service. Existing project hooks and host permission enforcement remain independent; installing the skill does not technically intercept every commit made by other tools or people.
+
 Repository, terminal, Git, network, browser, image, and editing capabilities come from the host. When unavailable, FrontScope works with supplied snippets and artifacts and identifies how missing access limits the conclusions. External documentation access is optional and must use approved tools.
 
 Repository content does not need to be uploaded to an external service. Source code, logs, screenshots, credentials, and proprietary documents must not be transmitted without authorization. Retrieved content and tool output are treated as untrusted data, including embedded instructions that attempt to redirect the task.
@@ -373,7 +424,7 @@ git diff --check
 
 | Check | Purpose |
 | --- | --- |
-| `tests/validate.py` | Validate the package's restricted YAML profile, naming, local links, resource isolation, evaluation inputs, and fixture mapping to specification scenarios T01–T12. Mapping coverage does not establish behavioral success. It is not a general YAML parser or a complete official specification validator. |
+| `tests/validate.py` | Validate the package's restricted YAML profile, naming, local links, resource isolation, and both evaluation manifests, including globally unique case IDs, nonempty criteria, input paths, and original T01–T12 mappings. Coverage does not establish behavioral success. It is not a general YAML parser or a complete official specification validator. |
 | `tests/check-fixtures.mjs` | Reproduce the sample zero-discount regression and compare the clean-change outputs for selected inputs. Success validates the fixture assumptions, not the defective candidate. |
 | `tests/probe_codex.py` | Optionally query native discovery through a local Codex app-server without requesting a model turn. It uses existing Codex configuration and an experimental protocol. |
 | `git diff --check` | Check tracked changes for whitespace errors. |
@@ -397,7 +448,9 @@ The [evaluation manifest](tests/cases.json) contains twelve cases:
 
 The cases map explicitly to specification scenarios T01–T12 in the [evaluation guide](tests/README.md); the mapping is not one-to-one. The read-only evaluation procedure compares source inventories/hashes before and after execution and inspects tool activity across review cases. The cases also assess report IDs, consistency, severity, confidence, evidence, and honest validation claims. They include fixed inputs and acceptance/rejection criteria. Model responses are not deterministic: structural checks and JavaScript fixture results do not replace independent behavioral evaluation.
 
-Follow the [evaluation guide](tests/README.md) to run each prompt with only its intended inputs, keep the answer rubric out of the agent's context, and record outcomes in fresh sessions. The guided report examples were produced during implementation; they are not a blind evaluation. The twelve cases have not been executed as an independent model evaluation suite.
+A separate [test-validation manifest](tests/test-validation-cases.json) has fourteen contextual cases: seven covering refactors and test decisions; five covering styles, library evidence, independent assertions, critical flows, and first test setup; two covering a chosen new-feature layout and scoped existing-project organization. The original 12 specification cases remain unchanged, giving 26 cases across two manifests. A synthetic `node:test` suite supports a baseline/candidate/corrected-source experiment for the refactor case; this does not imply tests must remain frozen for other change types.
+
+Follow the [evaluation guide](tests/README.md) to run each prompt with only its intended inputs, keep the answer rubric out of the agent's context, and record outcomes in fresh sessions. The guided report examples were produced during implementation; they are not a blind evaluation. Neither evaluation manifest has been executed as an independent model evaluation suite.
 
 The optional `skills-ref` validator was not run. The skill-creator validator was also not run because PyYAML was unavailable. Neither is a mandatory dependency for using FrontScope.
 
