@@ -1,0 +1,7 @@
+# Chosen local organization for a new feature
+
+The user is starting a React/TypeScript frontend and has selected feature-local organization with separate modules for meaningful stateful behavior, grouped constants, pure mapping, and local types/interfaces. This choice is explicit; it should guide the proposal rather than being dismissed merely because there is one consumer. No existing project files, installed dependencies, configuration, or executable environment have been supplied. The request is a structure proposal, not package installation or file creation.
+
+The first feature searches customers. It needs a component displaying results and accessible loading/error states; asynchronous request orchestration with cancellation; a domain-named pure mapping from an existing API response contract into rows; a group of search configuration constants; and feature-specific view types. A shared API client and API response type are already part of the chosen design and should be reused, not duplicated. State libraries and test tooling have not been selected yet.
+
+Propose a compact local tree and explain each responsibility, dependency direction, what is reused, and how tests would protect behavior. Do not create an empty global folder hierarchy, require shared placement for a single consumer, duplicate the API type, or claim actual scaffolding/typechecking. The convention requests meaningful separation, not one file for every function or interface. Future features do not justify speculative abstractions now.

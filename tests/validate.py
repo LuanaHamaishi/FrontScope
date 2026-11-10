@@ -12,6 +12,51 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / '.agents' / 'skills' / 'frontscope'
 
 
+def validate_manifest(path, known_ids, errors, required_spec_tests=None):
+    """Check evaluation inputs; this does not grade model behavior."""
+    try:
+        cases = json.loads(path.read_text(encoding='utf-8'))
+    except (OSError, ValueError) as error:
+        errors.append(f'Cannot read manifest {path.name}: {type(error).__name__}')
+        return 0
+    if not isinstance(cases, list) or not cases:
+        errors.append(f'Manifest must contain a nonempty case list: {path.name}')
+        return 0
+    covered = set()
+    for case in cases:
+        if not isinstance(case, dict):
+            errors.append(f'Case must be an object: {path.name}')
+            continue
+        case_id = case.get('id')
+        if not isinstance(case_id, str) or not case_id.strip() or case_id in known_ids:
+            errors.append(f'Empty, invalid, or duplicate case ID: {path.name}')
+        else:
+            known_ids.add(case_id)
+        if not isinstance(case.get('prompt'), str) or not case['prompt'].strip():
+            errors.append(f'Case has no valid prompt: {case_id}')
+        for field in ('inputs', 'accept', 'reject'):
+            values = case.get(field)
+            if (not isinstance(values, list) or not values or
+                    any(not isinstance(value, str) or not value.strip() for value in values)):
+                errors.append(f'Case has invalid {field}: {case_id}')
+                continue
+            if field == 'inputs':
+                for resource in values:
+                    target = (ROOT / 'tests' / resource).resolve()
+                    if not target.is_relative_to(ROOT / 'tests') or not target.is_file():
+                        errors.append(f'Invalid fixture: {resource}')
+        if required_spec_tests is not None:
+            spec_tests = case.get('spec_tests')
+            if (not isinstance(spec_tests, list) or not spec_tests or
+                    any(not isinstance(test, str) or test not in required_spec_tests for test in spec_tests)):
+                errors.append(f'Invalid specification mapping: {case_id}')
+            else:
+                covered.update(spec_tests)
+    if required_spec_tests is not None and required_spec_tests - covered:
+        errors.append(f'Specification scenarios without mapped fixtures: {", ".join(sorted(required_spec_tests - covered))}')
+    return len(cases)
+
+
 def validate():
     errors = []
     source = (SKILL / 'SKILL.md').read_text(encoding='utf-8')
@@ -77,30 +122,13 @@ def validate():
             if document.is_relative_to(SKILL) and not target.is_relative_to(SKILL):
                 errors.append(f'Package resource depends on an external file: {raw}')
 
-    cases = json.loads((ROOT / 'tests' / 'cases.json').read_text(encoding='utf-8'))
     ids = set()
     expected_spec_tests = {f'T{number:02d}' for number in range(1, 13)}
-    covered_spec_tests = set()
-    for case in cases:
-        if not case['id'] or case['id'] in ids:
-            errors.append('Empty or duplicate case ID.')
-        ids.add(case['id'])
-        if not case['prompt'] or not case['accept'] or not case['reject'] or not case['inputs']:
-            errors.append(f'Incomplete case: {case["id"]}')
-        spec_tests = case.get('spec_tests', [])
-        if (not isinstance(spec_tests, list) or not spec_tests or
-                any(not isinstance(test, str) or test not in expected_spec_tests for test in spec_tests)):
-            errors.append(f'Invalid specification mapping: {case["id"]}')
-        else:
-            covered_spec_tests.update(spec_tests)
-        for resource in case['inputs']:
-            target = (ROOT / 'tests' / resource).resolve()
-            if not target.is_relative_to(ROOT / 'tests') or not target.is_file():
-                errors.append(f'Invalid fixture: {resource}')
-    missing_spec_tests = expected_spec_tests - covered_spec_tests
-    if missing_spec_tests:
-        errors.append(f'Specification scenarios without mapped fixtures: {", ".join(sorted(missing_spec_tests))}')
-    print(f'Inspected: {len(documents)} documents, {checked_links} local links, {len(cases)} cases.')
+    original_count = validate_manifest(ROOT / 'tests' / 'cases.json', ids, errors, expected_spec_tests)
+    supplementary_count = validate_manifest(ROOT / 'tests' / 'test-validation-cases.json', ids, errors)
+    print(f'Inspected: {len(documents)} documents, {checked_links} local links, '
+          f'{original_count + supplementary_count} cases in 2 manifests '
+          f'({original_count} specification + {supplementary_count} supplementary).')
     return errors
 
 
