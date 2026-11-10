@@ -8,6 +8,8 @@ Use before substantial engineering judgments. Discovery is a scoped investigatio
 4. Follow contracts to producers and consumers: public types, events, APIs, routes, exports, and tests. In monorepos, expand only to workspaces connected to the behavior under investigation. In microfrontends, examine integration contracts, assets, state, and shared dependencies before suggesting centralization.
 5. Stop when evidence is sufficient to assess the question or a specific gap blocks a conclusion. Request the missing file, diff, version, or symptom without presenting inference as fact.
 
+For library-sensitive or UI work, identify the relevant component/design system, styling approach, wrappers, and library API contracts. Trace a small representative usage before generating an alternative. Research official documentation for the actual applicable version when accessible; otherwise state the local evidence and remaining assumptions. A manifest listing alone does not establish usage or supported APIs.
+
 Record a short context map:
 
 | Category | Record |

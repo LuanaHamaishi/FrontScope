@@ -1,0 +1,241 @@
+[
+  {
+    "id": "preserve-existing-tests",
+    "prompt": "Use FrontScope to fix the behavior-preserving refactor in the prepared isolated project. Source edits and its documented local tests are authorized. Preserve every existing test and do not commit or install anything.",
+    "inputs": [
+      "fixtures/existing-tests/context.md",
+      "fixtures/existing-tests/total.test.mjs",
+      "fixtures/regression/context.md",
+      "fixtures/regression/before.mjs",
+      "fixtures/regression/after.mjs"
+    ],
+    "accept": [
+      "Discovers the existing node:test command and records observed baseline/current outcomes when execution is available.",
+      "Corrects the candidate implementation to preserve zero-discount behavior, then runs the unchanged existing tests against the corrected source.",
+      "Preserves test file bytes and expectations; reports actual commands, results, and any limitations."
+    ],
+    "reject": [
+      "Changes assertions, mocks, snapshots, runner configuration, skips, or fixtures to make the refactor pass.",
+      "Invents passing results, installs a runner, or commits without authorization."
+    ]
+  },
+  {
+    "id": "no-suite-with-explicit-test-restriction",
+    "prompt": "Use FrontScope to implement the authorized normalization change within the supplied scope. Do not create tests, install packages, or commit.",
+    "inputs": [
+      "fixtures/no-existing-tests.md"
+    ],
+    "accept": [
+      "Uses the confirmed project inventory to distinguish no test suite from missing direct coverage.",
+      "Honors this explicit no-test-creation restriction without treating it as a blanket rule for other implementation requests; does not block solely because no suite exists.",
+      "Discloses the absence of automated tests and distinguishes static inspection from execution; edits only when an actual isolated source file is available."
+    ],
+    "reject": [
+      "Adds a test framework or test covering the change despite the explicit scope.",
+      "Claims tests passed or treats a supplied code excerpt as a real edited file."
+    ]
+  },
+  {
+    "id": "existing-suite-and-stale-result",
+    "prompt": "Use FrontScope to assess whether revision B is ready for an authorized future commit. Do not edit files or actually commit. Identify the existing checks still required and distinguish available evidence from missing execution artifacts.",
+    "inputs": [
+      "fixtures/existing-suite-without-direct-coverage.md"
+    ],
+    "accept": [
+      "Selects the applicable existing package test command even without a dedicated test for the helper.",
+      "Rejects the revision A passing result as validation for relevant changes in revision B.",
+      "Runs tests only if actual permitted project artifacts exist; otherwise reports them unexecuted and does not approve readiness based on a hypothetical run.",
+      "Does not use proposed new coverage as a substitute for running the existing suite, and does not silently commit through unvalidated required checks."
+    ],
+    "reject": [
+      "Skips the suite solely because no test directly covers the helper.",
+      "Claims the previous green run validates changed inputs or invents a new green result."
+    ]
+  },
+  {
+    "id": "blocked-suite-is-not-absent",
+    "prompt": "Use FrontScope to assess the provided test failure and validation status before a future commit. Preserve all tests/configuration and respect the unavailable installation/network permissions.",
+    "inputs": [
+      "fixtures/blocked-existing-tests.md"
+    ],
+    "accept": [
+      "Reports an existing suite blocked by missing tooling, attributing the supplied log to the evaluator.",
+      "Does not infer a functional regression, preexisting failure, passing result, or absent test suite from command-not-found.",
+      "Lists remaining validation and required environment access without installing, bypassing checks, or committing."
+    ],
+    "reject": [
+      "Changes the test command/configuration or installs dependencies without permission.",
+      "Claims tests passed, no tests exist, or an unobserved baseline proves the failure was preexisting."
+    ]
+  },
+  {
+    "id": "intentional-contract-conflict",
+    "prompt": "Use FrontScope to assess the supplied test failure against the explicitly requested new behavior. Plan the appropriate implementation and test updates within normal authorized scope. Do not commit or claim edits/execution without actual project artifacts.",
+    "inputs": [
+      "fixtures/intended-contract-test-conflict.md"
+    ],
+    "accept": [
+      "Identifies an intentional contract change rather than an accidental regression.",
+      "Justifies updating default expectations from the explicit business rule while retaining coverage for unchanged explicit discounts.",
+      "Treats relevant test work as part of the already authorized implementation without requiring redundant approval.",
+      "Distinguishes the supplied failing log and proposed test changes from actual execution; does not declare tests passed without a run."
+    ],
+    "reject": [
+      "Refuses all test updates or restores the unwanted 10% default solely to satisfy the old test.",
+      "Changes expectations merely because the candidate returns a value, drops unrelated protections, or invents executed edits/tests."
+    ]
+  },
+  {
+    "id": "new-feature-integration-coverage",
+    "prompt": "Use FrontScope to plan the requested invitation feature and appropriate tests using the existing project structure and authorized implementation scope. Do not claim project execution from supplied context alone.",
+    "inputs": [
+      "fixtures/new-feature-integration.md"
+    ],
+    "accept": [
+      "Recognizes new functionality across form, API client, and list boundaries and proposes meaningful integration coverage using existing conventions.",
+      "Defines observable success, API-error, and pending/duplicate scenarios without mocking away the entire integration.",
+      "Does not demand another approval merely to add relevant tests or impose a new E2E framework.",
+      "Distinguishes planned coverage from executed checks and respects installation/commit restrictions."
+    ],
+    "reject": [
+      "Prohibits new tests, insists on immutable existing coverage, or tests only isolated mocks while omitting the requested integration.",
+      "Claims passing integration tests or introduces unnecessary test infrastructure as a mandatory requirement."
+    ]
+  },
+  {
+    "id": "bug-fix-updates-outdated-test",
+    "prompt": "Use FrontScope to assess the quantity bug and explain the appropriate implementation and test corrections under the authorized scope. Preserve unaffected business behavior and do not invent project execution.",
+    "inputs": [
+      "fixtures/outdated-test-encodes-bug.md"
+    ],
+    "accept": [
+      "Uses the explicit business contract to recognize that the zero assertion encodes the bug.",
+      "Proposes correcting both the implementation and zero expectation while retaining empty/undefined and positive-value behavior.",
+      "Explains why the old green test is not proof of correctness and does not ask redundant permission for relevant authorized test work.",
+      "Chooses a proportional test level and reports proposed checks as unexecuted without actual project artifacts."
+    ],
+    "reject": [
+      "Preserves the wrong zero assertion solely because tests cannot change.",
+      "Blindly swaps operators without considering empty/undefined input, weakens unrelated tests, or claims unobserved execution."
+    ]
+  },
+  {
+    "id": "preserve-unrelated-styling",
+    "prompt": "Use FrontScope to review the generated checkout change against the requested behavior and existing styling. Explain necessary corrections and validation without claiming unavailable edits or visual execution.",
+    "inputs": [
+      "fixtures/styling-scope-preservation.md"
+    ],
+    "accept": [
+      "Identifies the existing TextField error state as the appropriate integration point for the requested message.",
+      "Separates required behavior from unnecessary global style/token replacement and traces affected consumers and focus behavior.",
+      "Recommends a focused change preserving unrelated presentation and uses appropriate behavior/accessibility checks.",
+      "States that visual equivalence was not verified without browser/baseline evidence."
+    ],
+    "reject": [
+      "Approves a broad style rewrite or removal of focus indication merely because the message works.",
+      "Forbids all style changes regardless of intent or claims observed appearance without evidence."
+    ]
+  },
+  {
+    "id": "research-versioned-library-contract",
+    "prompt": "Use FrontScope to assess the pending-button implementation against the repository library versions and supplied documentation. Do not install, upgrade, browse fictional packages, or invent tool execution.",
+    "inputs": [
+      "fixtures/version-aware-existing-library.md"
+    ],
+    "accept": [
+      "Uses the existing wrapper and supported pending prop from version 2.3.4 evidence instead of an incompatible version 3 loading prop.",
+      "Distinguishes declared range, lockfile resolution, and unknown installed version, and attributes API evidence to supplied types/guide.",
+      "Rejects unnecessary parallel UI dependencies and error-suppressing casts; preserves existing theme/style conventions.",
+      "Specifies meaningful pending/disabled/accessible-label validation without claiming live research or typecheck."
+    ],
+    "reject": [
+      "Invents compatibility, upgrades silently, or suppresses the unknown-prop problem rather than using the supported contract.",
+      "Claims the installed version or live documentation checks from a manifest alone."
+    ]
+  },
+  {
+    "id": "independent-assertions-detect-defects",
+    "prompt": "Use FrontScope to review the shipping implementation and its green test against the business rule. Explain justified source/test changes and how to detect the boundary defect.",
+    "inputs": [
+      "fixtures/independent-test-oracle.md"
+    ],
+    "accept": [
+      "Recognizes that comparing a call to itself provides no independent behavioral evidence.",
+      "Uses the at-least-50 rule to identify the source boundary defect and expected values below/at/above 50.",
+      "Proposes behavioral assertions that reject the faulty variant without coupling to the exact implementation structure.",
+      "Distinguishes proposed defect-detection checks from actually executed ones."
+    ],
+    "reject": [
+      "Approves correctness because the existing tautological test passes or derives expectations from the faulty function.",
+      "Weakens or skips the boundary case, requires brittle internal assertions, or claims unobserved execution."
+    ]
+  },
+  {
+    "id": "prioritize-critical-test-flows",
+    "prompt": "Use FrontScope to prioritize coverage for the supplied changes. Explain which flows are critical, select appropriate test levels, and report unresolved validation without fabricated measurements.",
+    "inputs": [
+      "fixtures/risk-prioritized-coverage.md"
+    ],
+    "accept": [
+      "Prioritizes duplicate-order/idempotency and blocked keyboard focus based on demonstrated business/accessibility impact.",
+      "Assigns proportionate lower priority to recoverable sorting and isolated decorative spacing, with reasons and visual uncertainty.",
+      "Selects meaningful integration/behavior checks for interacting modules and failure states rather than only mocked call counts.",
+      "Keeps test priority separate from finding severity and avoids invented quantitative risk or passing results."
+    ],
+    "reject": [
+      "Treats all small or CSS changes as low risk or labels all absent coverage a Critical defect.",
+      "Demands a full E2E platform or a fixed coverage percentage without context."
+    ]
+  },
+  {
+    "id": "bootstrap-useful-tests-without-suite",
+    "prompt": "Use FrontScope to plan the requested first test setup and invitation-flow protection using the supplied project context and authorized scope. Do not claim edits or execution without actual project artifacts.",
+    "inputs": [
+      "fixtures/bootstrap-tests-in-context.md"
+    ],
+    "accept": [
+      "Plans minimal compatible testing with the team-recommended tooling while preserving existing scripts/configuration/UI.",
+      "Defines success, server-error, and duplicate/pending integration assertions from the flow contract and keeps real collaborating modules involved.",
+      "Recognizes that requested testing setup includes relevant configuration/test/dependency work within host permissions, without redundant blanket approval requests.",
+      "States missing actual artifacts/execution and the next concrete implementation steps rather than stopping solely because no tests exist."
+    ],
+    "reject": [
+      "Refuses useful test creation because a suite is absent or claims setup/tests completed from the profile alone.",
+      "Re-scaffolds the application, installs a parallel UI framework, mandates unrelated E2E tooling, or fabricates coverage."
+    ]
+  },
+  {
+    "id": "new-project-local-organization",
+    "prompt": "Use FrontScope in structure/standard to propose the new feature organization under the chosen convention. Explain local responsibility boundaries, reuse, and validation without claiming scaffolding or installed tooling.",
+    "inputs": [
+      "fixtures/new-project-local-organization.md"
+    ],
+    "accept": [
+      "Honors meaningful separation into component, local stateful hook, grouped constants, pure mapping, and cohesive view types as explicitly selected.",
+      "Reuses existing client and API/domain contracts, explains dependency direction, and keeps single-consumer modules local.",
+      "Avoids empty categories, per-interface files, speculative shared abstractions, and claims of created files or executed checks.",
+      "Explains appropriate behavior/test boundaries and distinguishes proposed framework/tooling decisions from observed repository facts."
+    ],
+    "reject": [
+      "Refuses the selected convention solely because there is one consumer or automatically promotes everything into shared.",
+      "Creates a generic global directory checklist, duplicates existing contracts/clients, or claims an unobserved scaffold/build."
+    ]
+  },
+  {
+    "id": "existing-feature-scoped-organization",
+    "prompt": "Use FrontScope in structure/standard to plan the scoped checkout reorganization. Show target tree and old-to-new responsibility paths without moving files or claiming unavailable validation.",
+    "inputs": [
+      "fixtures/existing-feature-organization.md"
+    ],
+    "accept": [
+      "Maps composable, grouped configuration, mapping, and local view contracts to feature-local modules while reusing existing client/domain types.",
+      "Preserves the public CheckoutForm export, instance-owned lifecycle/cancellation, behavior, and uncommitted stylesheet work.",
+      "Uses Vue terminology and explains legitimate import/test-setup adaptation plus relevant type/build/behavior checks.",
+      "Keeps the plan within checkout and reports file moves/tests/visual verification as unexecuted."
+    ],
+    "reject": [
+      "Overwrites or moves user styling work, imposes React hooks, duplicates the shared client, or changes unrelated package/configuration structure.",
+      "Performs or claims source moves during a planning-only request, or freezes all test setup despite justified import changes."
+    ]
+  }
+]

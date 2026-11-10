@@ -17,7 +17,7 @@ git diff --check
 
 Python 3.9+ is needed only for the validators, and Node with `.mjs` support only for the executable JavaScript fixtures. Neither is required by the skill to review code. The optional probe requires an installed Codex binary, uses existing configuration, and starts/stops one local app-server without a model turn. Host policy may block it. It does not test Copilot, Claude, automatic selection, or review execution.
 
-`validate.py` checks the package's restricted YAML profile (strings and metadata), naming/directory, relative links, resource isolation, manifest integrity, and mappings to specification scenarios T01–T12. Coverage means fixtures and criteria are associated with a scenario, not that behavior passed. It is not a general YAML parser or complete official validator. `check-fixtures.mjs` establishes the sample regression trigger and clean-change equivalence for selected inputs. Success means **the fixture defect was reproduced**, not that the candidate is correct.
+`validate.py` checks the package's restricted YAML profile (strings and metadata), naming/directory, relative links, resource isolation, both evaluation manifests, and original mappings to specification scenarios T01–T12. It rejects missing manifests, duplicate IDs across manifests, empty/invalid prompts or criteria, and nonexistent/out-of-scope input paths. Coverage means fixtures/criteria are present, not that behavior passed. It is not a general YAML parser or complete official validator. `check-fixtures.mjs` establishes the sample regression trigger and clean-change equivalence for selected inputs. Success means **the fixture defect was reproduced**, not that the candidate is correct.
 
 Optional external validator: `skills-ref validate .agents/skills/frontscope`, as described in the [official specification](https://agentskills.io/specification). Run it only if already available or installation is authorized. The skill-creator `quick_validate.py` requires PyYAML; missing PyYAML does not require installing packages to use FrontScope.
 
@@ -51,6 +51,33 @@ Explicit discovery/invocation and automatic selection are separate evaluations. 
 The manifest has 12 cases, without a one-to-one mapping to the 12 specification scenarios. T08 compares two cases, T10 is cross-cutting, and `injection` adds protection against embedded instructions. Reports with findings need unique IDs; an ordered plan is required when intervention makes sense, without inventing actions for a clean diff.
 
 The `spec_tests` fields make mappings inspectable without copying the external specification into the package. New fixtures use only synthetic code/data; the sensitive-material case does not authorize reading real credentials, capture, or network access. Do not reproduce marked private values or use real enterprise material in evaluation records.
+
+## Context-aware test validation cases
+
+The separate [test-validation manifest](test-validation-cases.json) has fourteen contextual frontend/testing cases. They supplement the original 12 specification cases without changing their inputs, expectations, or T01–T12 mappings. Test decisions depend on intended behavior and project context, not a blanket ban on creating or updating tests. Cases also cover style preservation, actual library evidence, test rigor/priority, first test setup, and project organization.
+
+| Case | Expected decision |
+| --- | --- |
+| `preserve-existing-tests` | Run existing tests, correct an introduced source regression, and retain original test bytes/expectations |
+| `no-suite-with-explicit-test-restriction` | Honor a specific request not to create tests in this case, without generalizing that restriction to other projects |
+| `existing-suite-and-stale-result` | Use the package suite despite missing direct coverage; do not reuse a passing result after relevant source changes |
+| `blocked-suite-is-not-absent` | Distinguish unavailable tooling from absent tests, functional failure, or passing validation |
+| `intentional-contract-conflict` | Justify relevant expectation changes for the requested new contract within ordinary authorized implementation scope |
+| `new-feature-integration-coverage` | Plan integration coverage for new form/API/list behavior using the project's existing conventions |
+| `bug-fix-updates-outdated-test` | Correct an old assertion encoding the reported bug while preserving unrelated business behavior |
+| `preserve-unrelated-styling` | Use an existing error state without rewriting global input styles or removing focus indication |
+| `research-versioned-library-contract` | Select the existing wrapper and applicable versioned API; expose unknown installation/documentation evidence |
+| `independent-assertions-detect-defects` | Detect a tautological green test and derive meaningful boundary assertions from a business rule |
+| `prioritize-critical-test-flows` | Prioritize critical business/accessibility flows while separating test priority from finding severity |
+| `bootstrap-useful-tests-without-suite` | Plan minimal compatible test setup and useful integration assertions for an explicit testing request |
+| `new-project-local-organization` | Honor a chosen local separation convention for meaningful responsibilities without speculative scaffolding or duplicated types/clients |
+| `existing-feature-scoped-organization` | Plan Vue feature moves while preserving public contracts, instance lifecycle, user styling work, and behavioral tests |
+
+Use the same independent-evaluation procedure above. Cases have different scopes: some authorize edits, others only analysis, and some explicitly restrict test edits. Respect each scope; do not generalize its restrictions into universal policy. T10 remains read-only, while normal implementation can include justified test work. For the executable refactor case, prepare the isolated layout described by `fixtures/existing-tests/context.md` before starting the agent. Record test hashes before/after for that case's explicit preservation requirement. For authorized behavior/test changes, inspect the rationale and retained coverage instead of demanding identical test bytes. Never let evaluation setup authorize unrelated changes to FrontScope's real fixtures.
+
+`tests/fixtures/existing-tests/total.test.mjs` is a synthetic project's existing suite for the refactor evaluation, not a replacement for FrontScope's checks. A passing baseline, failing candidate, and passing corrected implementation with unchanged test bytes establish that behavior-preserving contract; they do not prove agent compliance or imply all test changes are inappropriate. The other scenarios deliberately exercise legitimate new coverage and changed expectations. Keep source/test diffs, rationale, tool activity, and observed results for independent evaluation.
+
+The packaging validator now checks both manifests. This removes the previous gap where supplementary inputs required a separate manual integrity check. It still does not grade responses or inspect an agent's actions: do not describe behavioral cases as passed merely because files exist or a synthetic suite ran. Keep test requirements strict about observable contracts but resilient to valid implementation changes; do not equate rigor with brittle assertions about incidental structure.
 
 [examples.md](examples.md) contains demonstrations produced during implementation, not independent evaluations or proof of integrated host execution. Actual check records are in [validation.md](validation.md).
 
